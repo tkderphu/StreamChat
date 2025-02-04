@@ -2,10 +2,9 @@ package com.example.video_chat.domain.entities;
 
 import com.example.video_chat.common.SecurityUtils;
 import jakarta.persistence.*;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "conversations")
@@ -81,13 +80,14 @@ public class Conversation extends BaseEntity {
         if(conversationType == ConversationType.PUBLIC) {
             return this.users
                     .stream()
-                    .anyMatch(s -> s.isOnline());
+                    .anyMatch(User::isOnline);
         }
         return getUserPrivateConversation().isOnline();
     }
 
 
     public List<PinMessage> getPinMessages() {
+        if(CollectionUtils.isEmpty(pinMessages)) return Collections.emptyList();
        return pinMessages;
     }
 
